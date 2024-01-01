@@ -1,0 +1,46 @@
+name: Build Docker Images
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Every day at UTC midnight
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check for new release in nextcloud/docker
+        id: check_release
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const repo = await github.repos.get({
+              owner: 'nextcloud',
+              repo: 'docker'
+            });
+            const latestRelease = repo.data.pushed_at;
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (new Date(latestRelease) > yesterday) {
+              return true;
+            } else {
+              return false;
+            }
+          result-encoding: string
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build the Docker image
+        if: steps.check_release.outputs.result == 'true'
+        run: |
+          docker buildx create --use
+          docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7 --file Dockerfile . --push -t jordiboehme/nextcloud-smb:latest
