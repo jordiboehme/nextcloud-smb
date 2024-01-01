@@ -17,11 +17,14 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const repo = await github.rest.repos.listReleases({
+            const releases = await github.rest.repos.listReleases({
               owner: 'nextcloud',
               repo: 'docker'
             });
-            const latestRelease = repo.data[0].pushed_at;
+            if (releases.data.length === 0) {
+              return false;
+            }
+            const latestRelease = releases.data[0].published_at;
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             if (new Date(latestRelease) > yesterday) {
