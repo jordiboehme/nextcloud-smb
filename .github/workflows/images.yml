@@ -17,7 +17,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const repo = await github.listReleases({
+            const repo = await github.rest.repos.listReleases({
               owner: 'nextcloud',
               repo: 'docker'
             });
