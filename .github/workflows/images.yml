@@ -19,7 +19,7 @@ jobs:
           script: |
             const releases = await github.rest.repos.listReleases({
               owner: 'nextcloud',
-              repo: 'docker'
+              repo: 'server'
             });
             if (releases.data.length === 0) {
               console.log('No releases found' + JSON.stringify(releases));
