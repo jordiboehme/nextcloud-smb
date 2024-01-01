@@ -49,4 +49,4 @@ jobs:
         # if: steps.check_release.outputs.result == 'true'
         run: |
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64/v8 --file Dockerfile . --push -t jordiboehme/nextcloud-smb:latest
+          docker buildx build --platform linux/amd64,linux/arm64/v8 --file Dockerfile . --push -t jordiboehmelopez/nextcloud-smb:latest
