@@ -21,7 +21,7 @@ jobs:
               owner: 'nextcloud',
               repo: 'docker'
             });
-            const latestRelease = repo.data.pushed_at;
+            const latestRelease = repo.data[0].pushed_at;
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             if (new Date(latestRelease) > yesterday) {
