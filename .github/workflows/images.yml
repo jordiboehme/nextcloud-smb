@@ -22,9 +22,11 @@ jobs:
               repo: 'docker'
             });
             if (releases.data.length === 0) {
+              console.log('No releases found' + JSON.stringify(releases));
               return false;
             }
             const latestRelease = releases.data[0].published_at;
+            console.log('Latest release: ' + latestRelease);
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             if (new Date(latestRelease) > yesterday) {
